@@ -1,0 +1,140 @@
+name: DevSecOps GCP Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  PROJECT_ID: your-gcp-project-id            # TODO: Change this to your GCP Project ID
+  GAR_LOCATION: asia-southeast1              # TODO: Change Artifact Registry Location (e.g. asia-southeast1)
+  REPOSITORY: ids-repo                       # TODO: Change Artifact Registry Repository Name
+  IMAGE: python-ids-app
+  SERVICE_NAME: ids-service                  # TODO: Change Cloud Run Service Name
+
+jobs:
+  # ----------------------------------------------------
+  # 1. SECURITY SCANS (Secret, SAST, SCA)
+  # ----------------------------------------------------
+  security-scans:
+    name: Code & Dependency Security Scans
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by TruffleHog to scan full git history
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies for SAST/SCA
+        run: |
+          python -m pip install --upgrade pip
+          pip install safety bandit
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Safety (SCA - Dependency Scanning)
+        run: |
+          if [ -f requirements.txt ]; then
+            safety check -r requirements.txt --output text || true
+          else
+            echo "No requirements.txt found, skipping safety check."
+          fi
+
+      - name: Run Bandit (SAST - Static Application Security Testing)
+        run: bandit -r . -f json -o bandit-report.json -ll -ii -x "./venv,./.venv,./tests" || true
+
+      - name: Show Bandit Report
+        if: always()
+        run: cat bandit-report.json || echo "No Bandit report generated"
+
+  # ----------------------------------------------------
+  # 2. BUILD AND CONTAINER IMAGE SCAN
+  # ----------------------------------------------------
+  build-and-container-scan:
+    name: Build & Scan Docker Image
+    needs: security-scans
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Local Docker Image for Scanning
+        run: docker build -t ${{ env.IMAGE }}:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner on Image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE }}:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'        # Fails the pipeline if vulnerabilities are found
+          ignore-unfixed: true  # Only show issues with a known fix
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+  # ----------------------------------------------------
+  # 3. DEPLOY TO GOOGLE CLOUD
+  # ----------------------------------------------------
+  deploy-to-gcp:
+    name: Deploy to Google Cloud Run
+    needs: build-and-container-scan
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Only deploy when code is pushed/merged to main branch
+    
+    # Required for Workload Identity Federation (OIDC) recommended by Google
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # -- Authentication to GCP --
+      # PREFERRED: Workload Identity Federation
+      # - name: Google Auth (Workload Identity Federation)
+      #   id: auth
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+      #     service_account: 'my-service-account@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
+          
+      # ALTERNATIVE: Service Account Key (Stored in Settings > Secrets and Variables > Actions)
+      - name: Google Auth (Service Account JSON)
+        id: auth-secret
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker to use Google Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
+
+      - name: Build and Push Docker Image to Artifact Registry
+        run: |
+          export IMAGE_URL=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
+          docker build -t $IMAGE_URL .
+          docker push $IMAGE_URL
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.GAR_LOCATION }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
+          # Uncomment if the app doesn't serve a web server on a port (like a background IDS job script)
+          # job-name: ${{ env.SERVICE_NAME }}-job
