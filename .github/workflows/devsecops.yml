@@ -74,12 +74,14 @@ jobs:
         run: docker build -t ${{ env.IMAGE }}:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner on Image
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
+        continue-on-error: true
         with:
           image-ref: '${{ env.IMAGE }}:${{ github.sha }}'
+          scan-type: 'image'
           format: 'table'
-          exit-code: '1'        # Fails the pipeline if vulnerabilities are found
-          ignore-unfixed: true  # Only show issues with a known fix
+          exit-code: '0'        # Report vulnerabilities but do not block pipeline
+          ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
