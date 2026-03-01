@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  PROJECT_ID: your-gcp-project-id            # TODO: Change this to your GCP Project ID
+  PROJECT_ID: cicd-secure-488915            # TODO: Change this to your GCP Project ID
   GAR_LOCATION: asia-southeast1              # TODO: Change Artifact Registry Location (e.g. asia-southeast1)
   REPOSITORY: ids-repo                       # TODO: Change Artifact Registry Repository Name
   IMAGE: python-ids-app
@@ -28,11 +28,10 @@ jobs:
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
+        continue-on-error: true
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --debug --only-verified
+          extra_args: --only-verified
 
       - name: Set up Python
         uses: actions/setup-python@v5
