@@ -31,7 +31,11 @@ jobs:
         #continue-on-error: true
         with:
           path: ./
+<<<<<<< HEAD
           # extra_args: --only-verified
+=======
+          #extra_args: --only-verified
+>>>>>>> d094a8067f136a8c26643252387206db910d105a
 
       - name: Set up Python
         uses: actions/setup-python@v5
