@@ -1,1 +1,1 @@
-test_secret_key = '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'
+test_secret_key = ''
