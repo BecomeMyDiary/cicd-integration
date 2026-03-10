@@ -69,43 +69,28 @@ CICD secure/
 
 ## 🚀 วิธีใช้งาน
 
-### 1. ตั้งค่า GCP Project
+นี่คือส่วนที่คุณต้อง Copy ไปและวิธีการปรับเทียบครับ:
 
-แก้ไขค่าใน `.github/workflows/devsecops.yml`:
+1. โฟลเดอร์ .github/workflows/ (ไฟล์ devsecops.yml)
+นี่คือหัวใจหลักของ CI/CD pipeline ที่รันบน GitHub Actions
 
-```yaml
-env:
-  PROJECT_ID: your-gcp-project-id       # ← ใส่ GCP Project ID
-  GAR_LOCATION: asia-southeast1         # ← ใส่ Region
-  REPOSITORY: ids-repo                  # ← ใส่ชื่อ Artifact Registry Repo
-  SERVICE_NAME: ids-service             # ← ใส่ชื่อ Cloud Run Service
-```
+วิธีทำ: Copy อานี้ทั้งโฟลเดอร์(.github) ไปวางไว้ที่โฟลเดอร์งาน (Root directory) ของ Project ใหม่
+สิ่งที่ต้องแก้:
+Env Variables: เปิดไฟล์ devsecops.yml แล้วแก้ตัวแปรช่วง env: ด้านบน เช่น PROJECT_ID, SERVICE_NAME, IMAGE, REPOSITORY ให้เป็นของ Project ใหม่
+Security Scans (สำคัญมาก): Pipeline เดิมในขั้นตอนของ Security Scans (บรรทัดที่ 37-57) ถูกออกแบบมาให้รันคำสั่งเช็กโค้ดของ Python (setup-python, ติดตั้ง pip install safety bandit) หากโปรเจกต์ใหม่เป็น Node.js คุณต้องเปลี่ยนมาใช้ของ Node เช่น actions/setup-node และสั่งรัน npm audit แทน safety/bandit
+2. ไฟล์ Dockerfile และ .dockerignore
+ใช้สำหรับการแพ็กโปรเจกต์ให้เป็น Container เพื่อนำไป Deploy บน Google Cloud Run (ตามที่ระบุใน CI/CD)
 
-### 2. ตั้งค่า GitHub Secrets
-
-ไปที่ GitHub Repository → Settings → Secrets and variables → Actions แล้วเพิ่ม:
-
-| Secret Name | ค่า |
-|------------|-----|
-| `GCP_CREDENTIALS` | JSON Key ของ Service Account |
-
-### 3. ทดสอบบนเครื่อง Local ก่อน Push
-
-```bash
-# ให้สิทธิ์รันสคริปต์
-chmod +x scripts/security-scan-local.sh
-
-# รัน Security Scan ทั้งหมดบนเครื่อง Local
-./scripts/security-scan-local.sh
-```
-
-### 4. Push Code ขึ้น GitHub
-
-```bash
-git add .
-git commit -m "Add DevSecOps pipeline"
-git push origin main
-```
+วิธีทำ: Copy ไปใส่ในโปรเจกต์ใหม่
+สิ่งที่ต้องแก้ใน Dockerfile: ของเดิมใช้ Base image เป็น python:3.13-slim คุณจะต้องเปลี่ยนไส้ในของ Dockerfile ทั้งหมดให้เป็นการ Build สำหรับ Node.js 
+(เช่นเริ่มด้วย FROM node:18-alpine, ทำการ COPY package*.json ./, สั่ง RUN npm install และ CMD ["node", "app.js"])
+สิ่งที่ต้องแก้ใน .dockerignore: ลบพวก .venv, __pycache__ ทิ้งไปแล้วใส่ node_modules/ ลงไปแทน
+3. ไฟล์ตั้งค่า Security (เช่น .trivyignore)
+วิธีทำ: สามารถ Copy ไฟล์ .trivyignore ไปใช้ได้เลย (ไฟล์นี้เอาไว้ตั้งค่าละเว้นช่องโหว่ (CVE) บางตัวจาก Container Scanner)
+สิ่งที่ "ไม่ต้อง" Copy: ไฟล์ .bandit.yaml ไม่ต้อง นำไปด้วย เพราะโปรแกรม Bandit เป็นตัวสแกนหาช่องโหว่ของโค้ด Python เท่านั้น
+4. การจัดการสิทธิ์การเข้าถึง (GCP Credentials)
+ข้อควรระวัง: ห้าม Copy ไฟล์รหัสผ่านอย่าง gcp-key.json ไปพร้อมกับ Source Code เด็ดขาด เพราะถ้าพุชขึ้น GitHub จะทำให้ความลับรั่วไหลได้
+วิธีทำ: ใน Github ของ Repository โปรเจกต์ใหม่ ให้คุณเข้าไปที่ Settings > Secrets and variables > Actions > New repository secret ตั้งชือช่องว่า GCP_CREDENTIALS แล้วนำข้อความในไฟล์ gcp-key.json ของเดิม (หรือของ Service account ใหม่ถ้าใช้ Project บน GCP แยกกัน) มาแปะไว้ที่นี่แทน (เพราะขั้นตอนที่ 3 ใน CI/CD ต้องการดึง Secret นี้ไปล็อกอิน)
 
 Pipeline จะทำงานอัตโนมัติ และตรวจสอบช่องโหว่ทุกขั้นตอนก่อน Deploy ขึ้น GCP Cloud Run
 
