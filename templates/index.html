@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DevSecOps CI/CD Pipeline Demo — ระบบตรวจสอบช่องโหว่อัตโนมัติก่อน Deploy ขึ้น Cloud">
+    <meta name="description"
+        content="DevSecOps CI/CD Pipeline Demo — ระบบตรวจสอบช่องโหว่อัตโนมัติก่อน Deploy ขึ้น Cloud">
     <title>DevSecOps Pipeline Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <!-- Animated Background -->
     <div class="bg-grid"></div>
@@ -22,6 +26,7 @@
             <div class="logo">
                 <span class="logo-icon">🛡️</span>
                 <span class="logo-text">DevSecOps</span>
+                <span class="logo-text">Test</span>
             </div>
             <nav class="nav">
                 <a href="#pipeline" class="nav-link">Pipeline</a>
@@ -46,7 +51,10 @@
             <div class="hero-actions">
                 <a href="#pipeline" class="btn btn-primary">
                     <span>ดู Pipeline Flow</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
                 </a>
                 <a href="#tools" class="btn btn-glass">
                     <span>เครื่องมือที่ใช้</span>
@@ -60,7 +68,7 @@
         <div class="container">
             <h2 class="section-title">Pipeline Flow</h2>
             <p class="section-desc">ทุกครั้งที่ Push Code ขึ้น GitHub ระบบจะสแกนช่องโหว่ทุกขั้นตอนก่อน Deploy</p>
-            
+
             <div class="pipeline-flow">
                 <div class="pipeline-step" data-step="1">
                     <div class="step-icon">📝</div>
@@ -131,7 +139,8 @@
                         <span class="tool-badge badge-critical">Secret Scan</span>
                     </div>
                     <h3 class="tool-name">TruffleHog</h3>
-                    <p class="tool-desc">ตรวจจับ API Keys, Passwords, Tokens ที่หลุดเข้ามาใน Source Code และ Git History</p>
+                    <p class="tool-desc">ตรวจจับ API Keys, Passwords, Tokens ที่หลุดเข้ามาใน Source Code และ Git History
+                    </p>
                     <div class="tool-tags">
                         <span class="tag">Git History</span>
                         <span class="tag">Credentials</span>
@@ -145,7 +154,8 @@
                         <span class="tool-badge badge-high">SAST</span>
                     </div>
                     <h3 class="tool-name">Bandit</h3>
-                    <p class="tool-desc">วิเคราะห์ Python Source Code แบบ Static เพื่อหาช่องโหว่ เช่น SQL Injection, Hardcoded Secrets</p>
+                    <p class="tool-desc">วิเคราะห์ Python Source Code แบบ Static เพื่อหาช่องโหว่ เช่น SQL Injection,
+                        Hardcoded Secrets</p>
                     <div class="tool-tags">
                         <span class="tag">Python</span>
                         <span class="tag">Static Analysis</span>
@@ -159,7 +169,8 @@
                         <span class="tool-badge badge-medium">SCA</span>
                     </div>
                     <h3 class="tool-name">Safety</h3>
-                    <p class="tool-desc">ตรวจสอบ Dependencies ใน requirements.txt ว่ามี CVE (ช่องโหว่ที่รู้จัก) หรือไม่</p>
+                    <p class="tool-desc">ตรวจสอบ Dependencies ใน requirements.txt ว่ามี CVE (ช่องโหว่ที่รู้จัก) หรือไม่
+                    </p>
                     <div class="tool-tags">
                         <span class="tag">Dependencies</span>
                         <span class="tag">CVE</span>
@@ -173,7 +184,8 @@
                         <span class="tool-badge badge-critical">Container</span>
                     </div>
                     <h3 class="tool-name">Trivy</h3>
-                    <p class="tool-desc">สแกน Docker Image หา OS-level และ Library-level Vulnerabilities ก่อน Push ขึ้น Registry</p>
+                    <p class="tool-desc">สแกน Docker Image หา OS-level และ Library-level Vulnerabilities ก่อน Push ขึ้น
+                        Registry</p>
                     <div class="tool-tags">
                         <span class="tag">Docker</span>
                         <span class="tag">Image Scan</span>
@@ -247,4 +259,5 @@
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>
