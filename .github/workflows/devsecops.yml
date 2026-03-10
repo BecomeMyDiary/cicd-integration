@@ -28,7 +28,7 @@ jobs:
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
-        continue-on-error: true
+        #continue-on-error: true
         with:
           path: ./
           extra_args: --only-verified
@@ -75,7 +75,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner on Image
         uses: aquasecurity/trivy-action@0.28.0
-        continue-on-error: true
+        #continue-on-error: true
         with:
           image-ref: '${{ env.IMAGE }}:${{ github.sha }}'
           scan-type: 'image'
