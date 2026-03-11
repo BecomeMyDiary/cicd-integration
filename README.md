@@ -102,6 +102,15 @@ CICD secure/
 - อัปเดตรายการไฟล์ตามความเหมาะสมกับภาษาที่ใช้งาน เช่น นำบรรทัด `.venv` และ `__pycache__` ออก แล้วใส่ `node_modules/` เพิ่มเข้าไปแทน
 
 ### 3. การจัดการสิทธิ์การเข้าถึง (GCP Credentials)
+
+**ขั้นตอนการสร้างและดาวน์โหลดไฟล์ Key (JSON) จาก Google Cloud:**
+1. เข้าสู่ระบบ Google Cloud Console และเลือกโปรเจกต์ของคุณ
+2. ไปที่เมนู **IAM & Admin** > **Service Accounts**
+3. คลิกที่อีเมล Service Account ที่ต้องการใช้ (เช่น `github-actions-sa@...`)
+4. ไปที่แท็บ **KEYS** > คลิกปุ่ม **ADD KEY** > เลือก **Create new key**
+5. เลือกประเภทไฟล์เป็น **JSON** แล้วกดปุ่ม **CREATE** (ไฟล์จะถูกดาวน์โหลดลงเครื่องอัตโนมัติ)
+
+**ข้อควรระวังในการนำไปใช้งาน:**
 - **ห้ามทำการ Copy ไฟล์รหัสผ่านอย่างเช่น `gcp-key.json` ไปพร้อมกับ Source Code และ Push ขึ้น GitHub เด็ดขาด** 
-- ให้กำหนดสิทธิ์โดยเข้าไปที่ **Settings > Secrets and variables > Actions > New repository secret** ของ GitHub Repository ในโปรเจกต์ใหม่ 
-- สร้าง Secret ที่มีชื่อว่า `GCP_CREDENTIALS` และคัดลอกข้อความในไฟล์ JSON service account key ไปวางในช่อง Value
+- ให้กำหนดสิทธิ์โดยเข้าไปที่ **Settings > Secrets and variables > Actions > New repository secret** ของ GitHub Repository 
+- สร้าง Secret ที่มีชื่อว่า `GCP_CREDENTIALS` และคัดลอกข้อความในไฟล์ JSON service account key ที่ดาวน์โหลดมา ไปวางในช่อง Value
