@@ -46,13 +46,14 @@ jobs:
       - name: Run Safety (SCA - Dependency Scanning)
         run: |
           if [ -f requirements.txt ]; then
-            safety check -r requirements.txt --output text || true
+            safety scan || true
           else
-            echo "No requirements.txt found, skipping safety check."
+            echo "No requirements.txt found, skipping safety scan."
           fi
 
       - name: Run Bandit (SAST - Static Application Security Testing)
         run: bandit -r . -f json -o bandit-report.json -ll -ii -x "./venv,./.venv,./tests" 
+        
 
       - name: Show Bandit Report
         if: always()
