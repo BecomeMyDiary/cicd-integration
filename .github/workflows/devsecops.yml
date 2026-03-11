@@ -46,7 +46,7 @@ jobs:
       - name: Run Safety (SCA - Dependency Scanning)
         run: |
           if [ -f requirements.txt ]; then
-            safety scan --disable-optional-telemetry || true
+            safety check -r requirements.txt --output text || true
           else
             echo "No requirements.txt found, skipping safety scan."
           fi
