@@ -52,7 +52,7 @@ jobs:
           fi
 
       - name: Run Bandit (SAST - Static Application Security Testing)
-        run: bandit -r . -f json -o bandit-report.json -ll -ii -x "./venv,./.venv,./tests" || true
+        run: bandit -r . -f json -o bandit-report.json -ll -ii -x "./venv,./.venv,./tests" 
 
       - name: Show Bandit Report
         if: always()
