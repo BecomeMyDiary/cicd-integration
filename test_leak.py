@@ -2,7 +2,6 @@ import hashlib
 import sqlite3
 
 # 1. 🛑 Secret Leak (สแกนพังที่ด่าน TruffleHog)
-#test_secret_key = 'xoxb-11111111111-22222222222-333333333333333333333333'
 
 # ==========================================
 # 🛑 SAST Vulnerabilities (สแกนพังที่ด่าน Bandit)
