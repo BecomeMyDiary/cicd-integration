@@ -46,7 +46,6 @@ jobs:
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
-        continue-on-error: true
         with:
           path: ./
 
