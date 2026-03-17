@@ -133,7 +133,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.ref == 'refs/heads/main' && 
-      (github.event_name != 'workflow_dispatch' || github.event.inputs.target_env == 'gcp' || github.event.inputs.target_env == 'both')
+      github.event_name == 'workflow_dispatch' && 
+      (github.event.inputs.target_env == 'gcp' || github.event.inputs.target_env == 'both')
     
     # Required for Workload Identity Federation (OIDC) recommended by Google
     permissions:
@@ -190,8 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.ref == 'refs/heads/main' && 
-      github.event_name == 'workflow_dispatch' && 
-      (github.event.inputs.target_env == 'aws' || github.event.inputs.target_env == 'both')
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.target_env == 'aws' || github.event.inputs.target_env == 'both')
 
     steps:
       - name: Checkout Code
