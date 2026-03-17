@@ -70,7 +70,7 @@ jobs:
           fi
 
       - name: Run Bandit (SAST - Static Application Security Testing)
-        continue-on-error: true
+        #continue-on-error: true
         run: bandit -r . -f json -o bandit-report.json -ll -ii -x "./venv,./.venv,./tests"
 
       - name: Show Bandit Report
