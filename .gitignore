@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large data files (not for version control)
+*.csv
+*.pcap
+*.keras
+*.gz
+*.h5
+
+# Environment variables (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# GCP / Cloud credentials (NEVER commit keys!)
+gcp-key.json
+*-credentials.json
+*-key.json
+*.pem
+
+# Logs
+*.log

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="DevSecOps CI/CD Pipeline Demo — ระบบตรวจสอบช่องโหว่อัตโนมัติก่อน Deploy ขึ้น Cloud">
+    <title>DevSecOps Pipeline Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">DevSecOps</span>
+                <span class="logo-text">Test</span>
+                <span class="logo-text">Test</span>
+                <span class="logo-text">Test</span>
+            </div>
+            <nav class="nav">
+                <a href="#pipeline" class="nav-link">Pipeline</a>
+                <a href="#tools" class="nav-link">Tools</a>
+                <a href="#status" class="nav-link">Status</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">🔒 Security-First CI/CD</div>
+            <h1 class="hero-title">
+                DevSecOps<br>
+                <span class="gradient-text">Pipeline Integration</span>
+            </h1>
+            <p class="hero-subtitle">
+                นำเครื่องมือ Security เข้าไปใส่ในกระบวนการ CI/CD<br>
+                เพื่อตรวจสอบช่องโหว่โดยอัตโนมัติก่อนที่จะ Deploy ขึ้น Cloud
+            </p>
+            <div class="hero-actions">
+                <a href="#pipeline" class="btn btn-primary">
+                    <span>ดู Pipeline Flow</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
+                <a href="#tools" class="btn btn-glass">
+                    <span>เครื่องมือที่ใช้</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pipeline Flow Section -->
+    <section id="pipeline" class="section">
+        <div class="container">
+            <h2 class="section-title">Pipeline Flow</h2>
+            <p class="section-desc">ทุกครั้งที่ Push Code ขึ้น GitHub ระบบจะสแกนช่องโหว่ทุกขั้นตอนก่อน Deploy</p>
+
+            <div class="pipeline-flow">
+                <div class="pipeline-step" data-step="1">
+                    <div class="step-icon">📝</div>
+                    <div class="step-content">
+                        <h3>Push Code</h3>
+                        <p>Developer push code ขึ้น GitHub</p>
+                    </div>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="pipeline-step" data-step="2">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-content">
+                        <h3>Secret Scan</h3>
+                        <p>TruffleHog ตรวจหา API Keys, Passwords</p>
+                    </div>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="pipeline-step" data-step="3">
+                    <div class="step-icon">🧪</div>
+                    <div class="step-content">
+                        <h3>SAST</h3>
+                        <p>Bandit วิเคราะห์ช่องโหว่ใน Source Code</p>
+                    </div>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="pipeline-step" data-step="4">
+                    <div class="step-icon">📦</div>
+                    <div class="step-content">
+                        <h3>SCA</h3>
+                        <p>Safety ตรวจ Dependencies ที่มี CVE</p>
+                    </div>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="pipeline-step" data-step="5">
+                    <div class="step-icon">🐳</div>
+                    <div class="step-content">
+                        <h3>Container Scan</h3>
+                        <p>Trivy สแกน Docker Image</p>
+                    </div>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="pipeline-step completed" data-step="6">
+                    <div class="step-icon">☁️</div>
+                    <div class="step-content">
+                        <h3>Deploy to GCP</h3>
+                        <p>Deploy ขึ้น Cloud Run อัตโนมัติ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="section section-dark">
+        <div class="container">
+            <h2 class="section-title">Security Tools</h2>
+            <p class="section-desc">เครื่องมือที่ใช้ในแต่ละขั้นตอนของ Pipeline</p>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-emoji">🔐</span>
+                        <span class="tool-badge badge-critical">Secret Scan</span>
+                    </div>
+                    <h3 class="tool-name">TruffleHog</h3>
+                    <p class="tool-desc">ตรวจจับ API Keys, Passwords, Tokens ที่หลุดเข้ามาใน Source Code และ Git History
+                    </p>
+                    <div class="tool-tags">
+                        <span class="tag">Git History</span>
+                        <span class="tag">Credentials</span>
+                        <span class="tag">API Keys</span>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-emoji">🧬</span>
+                        <span class="tool-badge badge-high">SAST</span>
+                    </div>
+                    <h3 class="tool-name">Bandit</h3>
+                    <p class="tool-desc">วิเคราะห์ Python Source Code แบบ Static เพื่อหาช่องโหว่ เช่น SQL Injection,
+                        Hardcoded Secrets</p>
+                    <div class="tool-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Static Analysis</span>
+                        <span class="tag">Code Quality</span>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-emoji">📋</span>
+                        <span class="tool-badge badge-medium">SCA</span>
+                    </div>
+                    <h3 class="tool-name">Safety</h3>
+                    <p class="tool-desc">ตรวจสอบ Dependencies ใน requirements.txt ว่ามี CVE (ช่องโหว่ที่รู้จัก) หรือไม่
+                    </p>
+                    <div class="tool-tags">
+                        <span class="tag">Dependencies</span>
+                        <span class="tag">CVE</span>
+                        <span class="tag">PyPI</span>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-emoji">🐳</span>
+                        <span class="tool-badge badge-critical">Container</span>
+                    </div>
+                    <h3 class="tool-name">Trivy</h3>
+                    <p class="tool-desc">สแกน Docker Image หา OS-level และ Library-level Vulnerabilities ก่อน Push ขึ้น
+                        Registry</p>
+                    <div class="tool-tags">
+                        <span class="tag">Docker</span>
+                        <span class="tag">Image Scan</span>
+                        <span class="tag">OS Vulns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Status Section -->
+    <section id="status" class="section">
+        <div class="container">
+            <h2 class="section-title">Pipeline Status</h2>
+            <p class="section-desc">สถานะการทำงานปัจจุบันของแต่ละ Security Gate</p>
+
+            <div class="status-table-wrapper">
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Tool</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="stage-num">1</span></td>
+                            <td class="tool-col">TruffleHog</td>
+                            <td>Secret Scanning — ตรวจจับข้อมูลลับใน Code</td>
+                            <td><span class="status-badge status-pass" id="status-1">✅ Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="stage-num">2</span></td>
+                            <td class="tool-col">Safety</td>
+                            <td>SCA — ตรวจสอบ Dependencies ที่มีช่องโหว่</td>
+                            <td><span class="status-badge status-pass" id="status-2">✅ Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="stage-num">3</span></td>
+                            <td class="tool-col">Bandit</td>
+                            <td>SAST — วิเคราะห์ Source Code หาช่องโหว่</td>
+                            <td><span class="status-badge status-pass" id="status-3">✅ Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="stage-num">4</span></td>
+                            <td class="tool-col">Trivy</td>
+                            <td>Container Scan — สแกน Docker Image</td>
+                            <td><span class="status-badge status-running" id="status-4">🔄 Scanning</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="stage-num">5</span></td>
+                            <td class="tool-col">Cloud Run</td>
+                            <td>Deploy — นำขึ้น GCP Cloud Run</td>
+                            <td><span class="status-badge status-pending" id="status-5">⏳ Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>🛡️ DevSecOps CI/CD Pipeline Demo — Security-First Development</p>
+            <p class="footer-sub">Built with Flask • Deployed via GitHub Actions • Running on GCP Cloud Run</p>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

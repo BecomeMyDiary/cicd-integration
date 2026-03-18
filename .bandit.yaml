@@ -1,0 +1,28 @@
+# =============================================================
+# Bandit Configuration (Python SAST)
+# =============================================================
+# Bandit scans Python source code for common security issues.
+# Docs: https://bandit.readthedocs.io/en/latest/config.html
+# =============================================================
+
+# Directories/files to exclude from scanning
+exclude_dirs:
+  - .venv
+  - venv
+  - tests
+  - __pycache__
+  - .git
+
+# Specific test IDs to skip (uncomment as needed)
+# Reference: https://bandit.readthedocs.io/en/latest/plugins/index.html
+skips:
+  # B101: assert_used - common in tests
+  - B101
+  # B404: import_subprocess - acceptable in controlled scripts
+  # - B404
+  # B603: subprocess_without_shell_equals_true
+  # - B603
+
+# Only report issues with severity >= LOW and confidence >= MEDIUM
+# severity: LOW, MEDIUM, HIGH
+# confidence: LOW, MEDIUM, HIGH
