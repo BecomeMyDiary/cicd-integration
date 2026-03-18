@@ -67,6 +67,51 @@ CICD secure/
 └── README.md                    # เอกสารนี้
 ```
 
+<<<<<<< HEAD
+=======
+## 📦 SBOM (Software Bill of Materials)
+
+Pipeline จะสร้างรายงาน SBOM อัตโนมัติในรูปแบบ **CycloneDX** ทุกครั้งที่รัน โดยจะสร้าง 2 ไฟล์:
+
+| ไฟล์ | เนื้อหา |
+|------|---------|
+| `source-sbom.json` | รายการ Library/Dependencies ทั้งหมดของ Source Code (เช่น Flask, requests) |
+| `image-sbom.json` | รายการแพ็กเกจทั้งหมดใน Docker Image รวมถึงแพ็กเกจระดับ OS (เช่น openssl, libcurl) |
+
+### วิธีดาวน์โหลดและดู SBOM
+
+1. ไปที่หน้า **Actions** ของ Repository บน GitHub
+2. คลิกเข้าไปที่ Workflow Run ที่ต้องการ (เลือกรอบที่มีเครื่องหมาย ✅ สีเขียว)
+3. เลื่อนลงมาด้านล่างสุดของหน้า **Summary**
+4. ที่หัวข้อ **Artifacts** ให้คลิกดาวน์โหลด **`sbom-reports`**
+5. แตกไฟล์ `.zip` ที่ได้ จะพบไฟล์ JSON ทั้ง 2 ไฟล์
+
+### ตัวอย่างเนื้อหาภายในไฟล์ SBOM
+
+```json
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "name": "flask",
+      "version": "3.0.0",
+      "type": "library"
+    },
+    {
+      "name": "openssl",
+      "version": "3.0.13",
+      "type": "library"
+    }
+  ]
+}
+```
+
+### เครื่องมือสำหรับวิเคราะห์ SBOM เพิ่มเติม
+
+- **[Dependency-Track](https://dependencytrack.org/)** — ระบบ Open Source สำหรับจัดการ SBOM แบบรวมศูนย์ สามารถ Import ไฟล์ CycloneDX เข้าไปเพื่อดูกราฟ Components และติดตามช่องโหว่แบบ Real-time
+- **[Grype](https://github.com/anchore/grype)** — สแกนไฟล์ SBOM เพื่อตรวจหา CVE ด้วยคำสั่ง `grype sbom:source-sbom.json`
+
+>>>>>>> 19cd87864a9037290c9798c1fb97940382f03f8f
 ## ⚙️ การปรับแต่ง
 
 - **ปรับ Bandit rules:** แก้ไข `.bandit.yaml` เพื่อข้าม test ID ที่ไม่เกี่ยวข้อง
