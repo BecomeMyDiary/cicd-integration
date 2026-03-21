@@ -37,7 +37,6 @@ jobs:
   # ----------------------------------------------------
   security-scans:
     name: Code & Dependency Security Scans
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -83,7 +82,6 @@ jobs:
   # ----------------------------------------------------
   build-and-container-scan:
     name: Build & Scan Docker Image
-    if: false
     needs: security-scans
     runs-on: ubuntu-latest
     steps:
@@ -131,7 +129,7 @@ jobs:
   # ----------------------------------------------------
   deploy-to-gcp:
     name: Deploy to Google Cloud Run
-    # needs: build-and-container-scan
+    needs: build-and-container-scan
     runs-on: ubuntu-latest
     if: |
       github.ref == 'refs/heads/main' && 
@@ -188,7 +186,7 @@ jobs:
   # ----------------------------------------------------
   deploy-to-aws:
     name: Deploy to AWS App Runner
-    # needs: build-and-container-scan
+    needs: build-and-container-scan
     runs-on: ubuntu-latest
     if: |
       github.ref == 'refs/heads/main' && 
